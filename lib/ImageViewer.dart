@@ -23,7 +23,6 @@ class ImageViewerState extends State<ImageViewer> {
   ImageViewerState(this.name, this.file, this._insideSavedSection);
 
   Future<bool> _saveFile() async {
-    // String directory = Directory.current.path;
     Directory appDocDirectory = await getApplicationDocumentsDirectory();
     final path = Directory(appDocDirectory.path + "/savedImages/");
     try {
