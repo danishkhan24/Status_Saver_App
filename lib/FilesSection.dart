@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'ImageGridViewer.dart';
 import 'VideoGridViewer.dart';
 
@@ -14,7 +17,7 @@ class FilesSection extends StatefulWidget {
   FilesSectionState createState() => FilesSectionState(appDocDirectory);
 }
 
-class FilesSectionState extends State<FilesSection> {
+class FilesSectionState extends State<FilesSection> with AutomaticKeepAliveClientMixin<FilesSection>{
   final appDocDirectory;
 
   FilesSectionState(this.appDocDirectory);
@@ -22,6 +25,7 @@ class FilesSectionState extends State<FilesSection> {
   @override
   void initState() {
     super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -31,9 +35,11 @@ class FilesSectionState extends State<FilesSection> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return DefaultTabController(
       length: 4,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         drawer: Drawer(
           child: drawer(),
         ),
@@ -51,10 +57,10 @@ class FilesSectionState extends State<FilesSection> {
                 icon: Icon(Icons.cloud_download),
               ),
               Tab(
-                icon: Icon(Icons.ondemand_video_sharp),
+                icon: Icon(Icons.emoji_emotions_outlined),
               ),
               Tab(
-                icon: Icon(Icons.emoji_emotions_outlined),
+                icon: Icon(Icons.web_outlined),
               ),
             ],
           ),
@@ -71,7 +77,7 @@ class FilesSectionState extends State<FilesSection> {
               onPressed: () {},
               style: ButtonStyle(
                   backgroundColor:
-                  MaterialStateProperty.all(Colors.transparent),
+                      MaterialStateProperty.all(Colors.transparent),
                   elevation: MaterialStateProperty.all(0)),
               child: Icon(Icons.help_center_outlined),
             ),
@@ -88,10 +94,27 @@ class FilesSectionState extends State<FilesSection> {
                   Directory('/storage/emulated/0/Movies/'), false),
               NestedTabBar(appDocDirectory, appDocDirectory, true),
               Container(
-                child: Icon(Icons.video_collection),
-              ),
-              Container(
                 child: Icon(Icons.emoji_emotions_outlined),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    width: MediaQuery.of(context).size.width * 0.98,
+                    child: WebView(
+                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                        Factory<HorizontalDragGestureRecognizer>(
+                              () => HorizontalDragGestureRecognizer(),
+                        ),
+                      },
+                      gestureNavigationEnabled: true,
+                      userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+                      javascriptMode: JavascriptMode.unrestricted,
+                      initialUrl: 'https://web.whatsapp.com',
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -191,6 +214,9 @@ class FilesSectionState extends State<FilesSection> {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class NestedTabBar extends StatefulWidget {
