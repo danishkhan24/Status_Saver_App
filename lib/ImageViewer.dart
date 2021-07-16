@@ -27,10 +27,8 @@ class ImageViewerState extends State<ImageViewer> {
     final path = Directory(appDocDirectory.path + "/savedImages/");
     try {
       if (await path.exists()) {
-        print("copying");
         file.copy(path.path + "/$name");
       } else {
-        print("creating and copying");
         path.create();
         file.copy(path.path + "/$name");
       }
