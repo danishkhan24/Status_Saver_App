@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'ImageGridViewer.dart';
 import 'VideoGridViewer.dart';
+
 
 Directory appDocDirectory;
 
@@ -43,6 +45,11 @@ class FilesSectionState extends State<FilesSection> with AutomaticKeepAliveClien
         drawer: Drawer(
           child: drawer(),
         ),
+        // bottomNavigationBar: FacebookBannerAd(
+        //   bannerSize: BannerSize.STANDARD,
+        //   keepAlive: true,
+        //   placementId: "Your Placement ID",
+        // ),
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
