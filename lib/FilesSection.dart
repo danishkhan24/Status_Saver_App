@@ -1,12 +1,10 @@
 import 'dart:io';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:status_saver/stickers/stickers-page.dart';
+import 'package:status_saver/whatsappweb.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'ImageGridViewer.dart';
 import 'VideoGridViewer.dart';
-
 
 Directory appDocDirectory;
 
@@ -19,7 +17,8 @@ class FilesSection extends StatefulWidget {
   FilesSectionState createState() => FilesSectionState(appDocDirectory);
 }
 
-class FilesSectionState extends State<FilesSection> with AutomaticKeepAliveClientMixin<FilesSection>{
+class FilesSectionState extends State<FilesSection>
+    with AutomaticKeepAliveClientMixin<FilesSection> {
   final appDocDirectory;
 
   FilesSectionState(this.appDocDirectory);
@@ -45,11 +44,6 @@ class FilesSectionState extends State<FilesSection> with AutomaticKeepAliveClien
         drawer: Drawer(
           child: drawer(),
         ),
-        // bottomNavigationBar: FacebookBannerAd(
-        //   bannerSize: BannerSize.STANDARD,
-        //   keepAlive: true,
-        //   placementId: "Your Placement ID",
-        // ),
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -64,7 +58,7 @@ class FilesSectionState extends State<FilesSection> with AutomaticKeepAliveClien
                 icon: Icon(Icons.cloud_download),
               ),
               Tab(
-                icon: Icon(Icons.emoji_emotions_outlined),
+                icon: Icon(Icons.emoji_symbols),
               ),
               Tab(
                 icon: Icon(Icons.web_outlined),
@@ -100,27 +94,19 @@ class FilesSectionState extends State<FilesSection> with AutomaticKeepAliveClien
               NestedTabBar(Directory('/storage/emulated/0/Pictures/'),
                   Directory('/storage/emulated/0/Movies/'), false),
               NestedTabBar(appDocDirectory, appDocDirectory, true),
-              Container(
-                child: Icon(Icons.emoji_emotions_outlined),
-              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.8,
-                    width: MediaQuery.of(context).size.width * 0.98,
-                    child: WebView(
-                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-                        Factory<HorizontalDragGestureRecognizer>(
-                              () => HorizontalDragGestureRecognizer(),
-                        ),
-                      },
-                      gestureNavigationEnabled: true,
-                      userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-                      javascriptMode: JavascriptMode.unrestricted,
-                      initialUrl: 'https://web.whatsapp.com',
-                    ),
+                    height: MediaQuery.of(context).size.height * 0.82,
+                    child: StickersPage(),
                   ),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  WhatsAppWeb(),
                 ],
               ),
             ],

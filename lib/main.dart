@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _loadInterstitialAd() {
-    print("inside load ad");
+    print("inside load Interstitial Ad");
 
     FacebookInterstitialAd.loadInterstitialAd(
       placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2650502525028617",
@@ -89,6 +89,13 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       },
     );
+  }
+
+  _showInterstitialAd() {
+    if (_isInterstitialAdLoaded == true)
+      FacebookInterstitialAd.showInterstitialAd();
+    else
+      print("Interstitial Ad not loaded yet!");
   }
 
   Future _getStoragePermission() async {
@@ -128,34 +135,31 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           SizedBox(
-            height: 220,
+            height: 200,
           ),
           Container(
             alignment: Alignment(0.5, 1),
-            // child: FacebookBannerAd(
-            //   placementId: Platform.isAndroid
-            //       ? "YOUR_ANDROID_PLACEMENT_ID"
-            //       : "YOUR_IOS_PLACEMENT_ID",
-            //   bannerSize: BannerSize.STANDARD,
-            //   keepAlive: true,
-            //   listener: (result, value) {
-            //     switch (result) {
-            //       case BannerAdResult.ERROR:
-            //         print("Error: $value");
-            //         break;
-            //       case BannerAdResult.LOADED:
-            //         print("Loaded: $value");
-            //         break;
-            //       case BannerAdResult.CLICKED:
-            //         print("Clicked: $value");
-            //         break;
-            //       case BannerAdResult.LOGGING_IMPRESSION:
-            //         print("Logging Impression: $value");
-            //         break;
-            //     }
-            //   },
-            // ),
-
+            child: FacebookBannerAd(
+              placementId: "IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID",
+              bannerSize: BannerSize.STANDARD,
+              keepAlive: true,
+              listener: (result, value) {
+                switch (result) {
+                  case BannerAdResult.ERROR:
+                    print("Error: $value");
+                    break;
+                  case BannerAdResult.LOADED:
+                    print("Loaded: $value");
+                    break;
+                  case BannerAdResult.CLICKED:
+                    print("Clicked: $value");
+                    break;
+                  case BannerAdResult.LOGGING_IMPRESSION:
+                    print("Logging Impression: $value");
+                    break;
+                }
+              },
+            ),
           ),
           Container(
               width: 120,
@@ -191,13 +195,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
-  }
-
-  _showInterstitialAd() {
-    if (_isInterstitialAdLoaded == true)
-      FacebookInterstitialAd.showInterstitialAd();
-    else
-      print("Interstitial Ad not yet loaded!");
   }
 }
 
