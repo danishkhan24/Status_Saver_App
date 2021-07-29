@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:status_saver/AdManager.dart';
 import 'package:status_saver/stickers/stickers-page.dart';
 import 'package:status_saver/whatsappweb.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -7,10 +8,13 @@ import 'ImageGridViewer.dart';
 import 'VideoGridViewer.dart';
 
 Directory appDocDirectory;
+FacebookAd adManager;
 
 class FilesSection extends StatefulWidget {
-  FilesSection(Directory appDocDir) {
+
+  FilesSection(Directory appDocDir, FacebookAd adMgr) {
     appDocDirectory = appDocDir;
+    adManager = adMgr;
   }
 
   @override
@@ -20,6 +24,7 @@ class FilesSection extends StatefulWidget {
 class FilesSectionState extends State<FilesSection>
     with AutomaticKeepAliveClientMixin<FilesSection> {
   final appDocDirectory;
+  // final adManager;
 
   FilesSectionState(this.appDocDirectory);
 
@@ -92,13 +97,13 @@ class FilesSectionState extends State<FilesSection>
           child: TabBarView(
             children: [
               NestedTabBar(Directory('/storage/emulated/0/Pictures/'),
-                  Directory('/storage/emulated/0/Movies/'), false),
-              NestedTabBar(appDocDirectory, appDocDirectory, true),
+                  Directory('/storage/emulated/0/Movies/'), false, adManager),
+              NestedTabBar(appDocDirectory, appDocDirectory, true, adManager),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.82,
+                    height: MediaQuery.of(context).size.height * 0.75,
                     child: StickersPage(),
                   ),
                 ],
@@ -106,12 +111,16 @@ class FilesSectionState extends State<FilesSection>
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  WhatsAppWeb(),
+                  Container(
+                      height: MediaQuery.of(context).size.height * 0.75,
+                      child: WhatsAppWeb()),
                 ],
               ),
             ],
           ),
         ),
+        bottomNavigationBar:
+            Container(height: 50, child: adManager.bannerAd),
       ),
     );
   }
@@ -216,22 +225,24 @@ class NestedTabBar extends StatefulWidget {
   final Directory photoDir;
   final Directory videoDir;
   final bool insideSavedSection;
+  final adManager;
 
-  NestedTabBar(this.photoDir, this.videoDir, this.insideSavedSection);
+  NestedTabBar(this.photoDir, this.videoDir, this.insideSavedSection, this.adManager);
 
   @override
   _NestedTabBarState createState() =>
-      _NestedTabBarState(photoDir, videoDir, insideSavedSection);
+      _NestedTabBarState(photoDir, videoDir, insideSavedSection, adManager);
 }
 
 class _NestedTabBarState extends State<NestedTabBar>
     with AutomaticKeepAliveClientMixin<NestedTabBar>, TickerProviderStateMixin {
   Directory photoDir;
   final Directory videoDir;
+  final adManager;
   bool insideSavedSection;
   TabController _nestedTabController;
 
-  _NestedTabBarState(this.photoDir, this.videoDir, this.insideSavedSection);
+  _NestedTabBarState(this.photoDir, this.videoDir, this.insideSavedSection, this.adManager);
 
   @override
   void initState() {
@@ -270,11 +281,11 @@ class _NestedTabBarState extends State<NestedTabBar>
           ],
         ),
         Container(
-          height: screenHeight * 0.725,
+          height: screenHeight * 0.69,
           child: TabBarView(
             controller: _nestedTabController,
             children: <Widget>[
-              ImageGridViewer(photoDir, insideSavedSection),
+              ImageGridViewer(photoDir, insideSavedSection, adManager),
               VideoGridViewer(videoDir, insideSavedSection),
             ],
           ),

@@ -1,21 +1,24 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:status_saver/AdManager.dart';
 import 'ImageViewer.dart';
 
 class ImageGridViewer extends StatefulWidget{
   final Directory photoDir;
   final bool insideSavedSection;
+  final adManager;
 
-  const ImageGridViewer(this.photoDir, this.insideSavedSection);
+  const ImageGridViewer(this.photoDir, this.insideSavedSection, this.adManager);
   @override
-  ImageGridViewerState createState() => ImageGridViewerState(photoDir, insideSavedSection);
+  ImageGridViewerState createState() => ImageGridViewerState(photoDir, insideSavedSection, adManager);
 }
 
 class ImageGridViewerState extends State<ImageGridViewer> with AutomaticKeepAliveClientMixin<ImageGridViewer>{
   final Directory photoDir;
   final bool _insideSavedSection;
+  final FacebookAd adManager;
 
-  ImageGridViewerState(this.photoDir, this._insideSavedSection);
+  ImageGridViewerState(this.photoDir, this._insideSavedSection, this.adManager);
 
   @override
   bool get wantKeepAlive => true;

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:status_saver/AdManager.dart';
+import 'package:status_saver/FilesSection.dart';
 
 class ImageViewer extends StatefulWidget {
   final String name;
@@ -58,6 +60,13 @@ class ImageViewerState extends State<ImageViewer> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: (){
+            adManager.showInterstitialAd();
+            Navigator.pop(context);
+          },
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(name),
@@ -70,7 +79,7 @@ class ImageViewerState extends State<ImageViewer> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Center(child: Image.file(file)),
+            Container(height: MediaQuery.of(context).size.height * 0.7,child: Image.file(file)),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -103,9 +112,11 @@ class ImageViewerState extends State<ImageViewer> {
                 shareButton(),
               ],
             ),
+            FacebookAd().bannerAd,
           ],
         ),
       ),
+      // bottomNavigationBar: FacebookAd().bannerAd,
     );
   }
 
