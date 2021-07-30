@@ -37,12 +37,25 @@ class FacebookAd {
       print("Interstitial Ad not loaded yet!");
   }
 
-  final Widget bannerAd = FacebookBannerAd(
-    placementId:
-        "IMG_16_9_APP_INSTALL#2312433698835503_2964944860251047", //testid
+  Widget bannerAd = FacebookBannerAd(
+    placementId: "IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID",
     bannerSize: BannerSize.STANDARD,
+    keepAlive: true,
     listener: (result, value) {
-      print("Banner Ad: $result -->  $value");
+      switch (result) {
+        case BannerAdResult.ERROR:
+          print("Error: $value");
+          break;
+        case BannerAdResult.LOADED:
+          print("Loaded: $value");
+          break;
+        case BannerAdResult.CLICKED:
+          print("Clicked: $value");
+          break;
+        case BannerAdResult.LOGGING_IMPRESSION:
+          print("Logging Impression: $value");
+          break;
+      }
     },
   );
 

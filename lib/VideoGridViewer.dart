@@ -7,20 +7,22 @@ import 'VideoPlay.dart';
 class VideoGridViewer extends StatefulWidget {
   final Directory videoDir;
   final bool insideSavedSection;
+  final adManager;
 
-  const VideoGridViewer(this.videoDir, this.insideSavedSection);
+  const VideoGridViewer(this.videoDir, this.insideSavedSection, this.adManager);
 
   @override
   VideoGridViewerState createState() =>
-      VideoGridViewerState(videoDir, insideSavedSection);
+      VideoGridViewerState(videoDir, insideSavedSection, adManager);
 }
 
 class VideoGridViewerState extends State<VideoGridViewer>
     with AutomaticKeepAliveClientMixin<VideoGridViewer> {
   final Directory videoDir;
   final bool _insideSavedSection;
+  final adManager;
 
-  VideoGridViewerState(this.videoDir, this._insideSavedSection);
+  VideoGridViewerState(this.videoDir, this._insideSavedSection, this.adManager);
 
   @override
   bool get wantKeepAlive => true;
@@ -57,7 +59,7 @@ class VideoGridViewerState extends State<VideoGridViewer>
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return VideoApp(file, _insideSavedSection);
+                        return VideoApp(file, _insideSavedSection, adManager);
                       },
                     ),
                   ).then((value) {

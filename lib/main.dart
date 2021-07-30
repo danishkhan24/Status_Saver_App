@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Status Saver',
       theme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: Color(0xFF3d4e4f),
@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   initState() {
     super.initState();
     facebookAd.loadInterstitialAd();
-    remoteSetup();
+    // remoteSetup();
   }
 
   Future _getStoragePermission() async {

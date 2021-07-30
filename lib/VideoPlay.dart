@@ -8,12 +8,13 @@ import 'package:flutter/material.dart';
 class VideoApp extends StatefulWidget {
   final File videoFile;
   final bool _insideSavedSection;
+  final adManager;
 
-  VideoApp(this.videoFile, this._insideSavedSection);
+  VideoApp(this.videoFile, this._insideSavedSection, this.adManager);
 
   @override
   _VideoAppState createState() =>
-      _VideoAppState(videoFile, _insideSavedSection);
+      _VideoAppState(videoFile, _insideSavedSection, adManager);
 }
 
 class _VideoAppState extends State<VideoApp> {
@@ -22,8 +23,9 @@ class _VideoAppState extends State<VideoApp> {
   File videoFile;
   String name;
   bool _insideSavedSection;
+  final adManager;
 
-  _VideoAppState(this.videoFile, this._insideSavedSection) {
+  _VideoAppState(this.videoFile, this._insideSavedSection, this.adManager) {
     name = videoFile.path.split('/').last;
   }
 
@@ -84,6 +86,13 @@ class _VideoAppState extends State<VideoApp> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: (){
+            adManager.showInterstitialAd();
+            Navigator.pop(context);
+          },
+        ),
         title: Text(
           name,
         ),

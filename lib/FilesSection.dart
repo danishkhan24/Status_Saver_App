@@ -24,7 +24,6 @@ class FilesSection extends StatefulWidget {
 class FilesSectionState extends State<FilesSection>
     with AutomaticKeepAliveClientMixin<FilesSection> {
   final appDocDirectory;
-  // final adManager;
 
   FilesSectionState(this.appDocDirectory);
 
@@ -286,7 +285,7 @@ class _NestedTabBarState extends State<NestedTabBar>
             controller: _nestedTabController,
             children: <Widget>[
               ImageGridViewer(photoDir, insideSavedSection, adManager),
-              VideoGridViewer(videoDir, insideSavedSection),
+              VideoGridViewer(videoDir, insideSavedSection, adManager),
             ],
           ),
         )

@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
    <application
        android:requestLegacyExternalStorage="true"
-       android:label="status_saver"
+       android:label="Status Saver"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
