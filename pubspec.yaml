@@ -40,6 +40,7 @@ dependencies:
   webview_flutter: ^2.0.10
   facebook_audience_network: ^0.9.0
   flutter_whatsapp_stickers:
+  flutter_inappwebview:
 
 dev_dependencies:
   flutter_test:

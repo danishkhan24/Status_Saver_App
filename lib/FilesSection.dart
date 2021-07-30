@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:status_saver/AdManager.dart';
 import 'package:status_saver/stickers/stickers-page.dart';
 import 'package:status_saver/whatsappweb.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'ImageGridViewer.dart';
 import 'VideoGridViewer.dart';
 
@@ -11,7 +10,6 @@ Directory appDocDirectory;
 FacebookAd adManager;
 
 class FilesSection extends StatefulWidget {
-
   FilesSection(Directory appDocDir, FacebookAd adMgr) {
     appDocDirectory = appDocDir;
     adManager = adMgr;
@@ -30,7 +28,7 @@ class FilesSectionState extends State<FilesSection>
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -111,15 +109,15 @@ class FilesSectionState extends State<FilesSection>
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                      height: MediaQuery.of(context).size.height * 0.75,
-                      child: WhatsAppWeb()),
+                    height: MediaQuery.of(context).size.height * 0.75,
+                    child: WhatsAppWeb(),
+                  )
                 ],
               ),
             ],
           ),
         ),
-        bottomNavigationBar:
-            Container(height: 50, child: adManager.bannerAd),
+        bottomNavigationBar: Container(height: 50, child: adManager.bannerAd),
       ),
     );
   }
@@ -226,7 +224,8 @@ class NestedTabBar extends StatefulWidget {
   final bool insideSavedSection;
   final adManager;
 
-  NestedTabBar(this.photoDir, this.videoDir, this.insideSavedSection, this.adManager);
+  NestedTabBar(
+      this.photoDir, this.videoDir, this.insideSavedSection, this.adManager);
 
   @override
   _NestedTabBarState createState() =>
@@ -241,7 +240,8 @@ class _NestedTabBarState extends State<NestedTabBar>
   bool insideSavedSection;
   TabController _nestedTabController;
 
-  _NestedTabBarState(this.photoDir, this.videoDir, this.insideSavedSection, this.adManager);
+  _NestedTabBarState(
+      this.photoDir, this.videoDir, this.insideSavedSection, this.adManager);
 
   @override
   void initState() {
