@@ -47,36 +47,40 @@ class _MyHomePageState extends State<MyHomePage> {
   bool permissionGranted;
   FacebookAd facebookAd = FacebookAd();
   RemoteConfig remoteConfig;
+  bool isLoading = true;
   final Map<String, dynamic> _remoteValues = {
     "seenTab": true,
     "savedTab": true,
     "stickerTab": true,
     "webTab": true,
+    "SplashAd": true,
   };
 
-  Future<RemoteConfig> remoteSetup() async {
+  remoteSetup() async {
     await Firebase.initializeApp();
-    final remoteConfig = RemoteConfig.instance;
+    final remoteCfg = RemoteConfig.instance;
 
-    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+    await remoteCfg.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(seconds: 5),
         minimumFetchInterval: Duration.zero));
-    remoteConfig.fetchAndActivate();
+    remoteCfg.fetchAndActivate();
+    remoteConfig = remoteCfg;
 
-    return remoteConfig;
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   initState() {
     super.initState();
     facebookAd.loadInterstitialAd();
+    remoteSetup();
   }
 
   Future _getStoragePermission() async {
-    remoteConfig = await remoteSetup();
     Directory appDocDirectory = await getApplicationDocumentsDirectory();
     Directory path = Directory(appDocDirectory.path + "/savedImages/");
-    print("going up ...  $seenTab, $savedTab, $stickerTab, $webTab");
 
     if (await Permission.storage.request().isGranted) {
       permissionGranted = true;
@@ -85,7 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => FilesSection(path, facebookAd, remoteConfig)),
+        MaterialPageRoute(
+            builder: (context) => FilesSection(path, facebookAd, remoteConfig)),
       );
     } else if (await Permission.storage.request().isPermanentlyDenied) {
       await openAppSettings();
@@ -111,10 +116,14 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.fromLTRB(10,15,10,0),
-            height: 120,
-            child: FacebookAd().nativeAd,
-          ),
+              margin: EdgeInsets.fromLTRB(10, 15, 10, 0),
+              height: 120,
+              child: !isLoading
+                  ? remoteConfig.getString("SplashAd") == "true" ||
+                          remoteConfig.getString("SplashAd").isEmpty
+                      ? facebookAd.nativeAd
+                      : null
+                  : null),
           SizedBox(
             height: 150,
           ),
@@ -145,7 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   side: BorderSide(color: Color(0xFF122829))),
             ),
             onPressed: () {
-              facebookAd.showInterstitialAd();
+              if (remoteConfig.getString("InterstitialAd") == "true" ||
+                  remoteConfig.getString("InterstitialAd").isEmpty) {
+                facebookAd.showInterstitialAd();
+              }
               _getStoragePermission();
             },
           ),
@@ -154,4 +166,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-

@@ -105,20 +105,25 @@ class FilesSectionState extends State<FilesSection>
                     fit: BoxFit.fill)),
             child: TabBarView(
               children: [
-                remoteConfig.getString("SeenTab") == "true"
+                remoteConfig.getString("SeenTab") == "true" ||
+                        remoteConfig.getString("SeenTab").isEmpty
                     ? NestedTabBar(
-                        Directory('/storage/emulated/0/WhatsApp/Media/.Statuses'),
-                        Directory('/storage/emulated/0/WhatsApp/Media/.Statuses'),
+                        Directory(
+                            '/storage/emulated/0/WhatsApp/Media/.Statuses'),
+                        Directory(
+                            '/storage/emulated/0/WhatsApp/Media/.Statuses'),
                         false,
                         adManager)
                     : Container(child: Icon(Icons.error_outline)),
-                remoteConfig.getString("SavedTab") == "true"
+                remoteConfig.getString("SavedTab") == "true" ||
+                        remoteConfig.getString("SavedTab").isEmpty
                     ? NestedTabBar(
                         appDocDirectory, appDocDirectory, true, adManager)
                     : Container(
                         child: Icon(Icons.error_outline),
                       ),
-                remoteConfig.getString("StickerTab") == "true"
+                remoteConfig.getString("StickerTab") == "true" ||
+                        remoteConfig.getString("StickerTab").isEmpty
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -129,7 +134,8 @@ class FilesSectionState extends State<FilesSection>
                         ],
                       )
                     : Container(child: Icon(Icons.error_outline)),
-                remoteConfig.getString("WebTab") == "true"
+                remoteConfig.getString("WebTab") == "true" ||
+                        remoteConfig.getString("WebTab").isEmpty
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -143,7 +149,10 @@ class FilesSectionState extends State<FilesSection>
               ],
             ),
           ),
-          bottomNavigationBar: Container(height: 50, child: adManager.bannerAd),
+          bottomNavigationBar: remoteConfig.getString("MainBanner") == "true" ||
+                  remoteConfig.getString("MainBanner").isEmpty
+              ? Container(height: 50, child: adManager.bannerAd)
+              : SizedBox(height: 50,),
         );
       }),
     );
@@ -311,7 +320,7 @@ class _NestedTabBarState extends State<NestedTabBar>
           child: TabBarView(
             controller: _nestedTabController,
             children: <Widget>[
-              ImageGridViewer(photoDir, insideSavedSection, adManager),
+              ImageGridViewer(photoDir, insideSavedSection, adManager, remoteConfig),
               VideoGridViewer(videoDir, insideSavedSection, adManager),
             ],
           ),

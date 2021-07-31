@@ -1,16 +1,22 @@
 import 'dart:io';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:status_saver/AdManager.dart';
 import 'package:status_saver/FilesSection.dart';
 
+RemoteConfig remoteConfig;
+
 class ImageViewer extends StatefulWidget {
   final String name;
   final File file;
   final bool _insideSavedSection;
 
-  ImageViewer(this.name, this.file, this._insideSavedSection);
+  ImageViewer(
+      this.name, this.file, this._insideSavedSection, RemoteConfig remoteCfg) {
+    remoteConfig = remoteCfg;
+  }
 
   @override
   ImageViewerState createState() =>
@@ -62,8 +68,11 @@ class ImageViewerState extends State<ImageViewer> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: (){
-            adManager.showInterstitialAd();
+          onPressed: () {
+            if (remoteConfig.getString("InterstitialAd") == "true" ||
+                remoteConfig.getString("InterstitialAd").isEmpty) {
+              adManager.showInterstitialAd();
+            }
             Navigator.pop(context);
           },
         ),
@@ -79,7 +88,9 @@ class ImageViewerState extends State<ImageViewer> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Container(height: MediaQuery.of(context).size.height * 0.7,child: Image.file(file)),
+            Container(
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: Image.file(file)),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -125,7 +136,9 @@ class ImageViewerState extends State<ImageViewer> {
       return Padding(
         padding: EdgeInsets.all(20.0),
         child: FloatingActionButton(
-          onPressed: (){_onShare();},
+          onPressed: () {
+            _onShare();
+          },
           child: Icon(Icons.share_outlined),
         ),
       );
@@ -134,7 +147,7 @@ class ImageViewerState extends State<ImageViewer> {
     }
   }
 
-  void _onShare() async{
+  void _onShare() async {
     await Share.shareFiles([file.path]);
   }
 }
