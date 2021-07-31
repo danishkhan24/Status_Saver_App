@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:status_saver/AdManager.dart';
+import 'package:status_saver/HelpDialog.dart';
 import 'package:status_saver/stickers/stickers-page.dart';
 import 'package:status_saver/whatsappweb.dart';
 import 'ImageGridViewer.dart';
@@ -8,11 +10,13 @@ import 'VideoGridViewer.dart';
 
 Directory appDocDirectory;
 FacebookAd adManager;
+RemoteConfig remoteConfig;
 
 class FilesSection extends StatefulWidget {
-  FilesSection(Directory appDocDir, FacebookAd adMgr) {
+  FilesSection(Directory appDocDir, FacebookAd adMgr, RemoteConfig remoteCfg) {
     appDocDirectory = appDocDir;
     adManager = adMgr;
+    remoteConfig = remoteCfg;
   }
 
   @override
@@ -22,13 +26,13 @@ class FilesSection extends StatefulWidget {
 class FilesSectionState extends State<FilesSection>
     with AutomaticKeepAliveClientMixin<FilesSection> {
   final appDocDirectory;
+  int index = 0;
 
   FilesSectionState(this.appDocDirectory);
 
   @override
   void initState() {
     super.initState();
-    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -41,84 +45,107 @@ class FilesSectionState extends State<FilesSection>
     super.build(context);
     return DefaultTabController(
       length: 4,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        drawer: Drawer(
-          child: drawer(),
-        ),
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          bottom: TabBar(
-            unselectedLabelColor: Colors.black,
-            tabs: [
-              Tab(
-                icon: Icon(Icons.remove_red_eye),
-              ),
-              Tab(
-                icon: Icon(Icons.cloud_download),
-              ),
-              Tab(
-                icon: Icon(Icons.emoji_symbols),
-              ),
-              Tab(
-                icon: Icon(Icons.web_outlined),
-              ),
-            ],
+      child: Builder(builder: (BuildContext context) {
+        return Scaffold(
+          // resizeToAvoidBottomInset: false,
+          drawer: Drawer(
+            child: drawer(),
           ),
-          title: Text('Status Saver'),
-          actions: [
-            ElevatedButton(
-                onPressed: () {},
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            bottom: TabBar(
+              unselectedLabelColor: Colors.black,
+              tabs: [
+                Tab(
+                  icon: Icon(Icons.remove_red_eye),
+                ),
+                Tab(
+                  icon: Icon(Icons.cloud_download),
+                ),
+                Tab(
+                  icon: Icon(Icons.emoji_symbols),
+                ),
+                Tab(
+                  icon: Icon(Icons.web_outlined),
+                ),
+              ],
+            ),
+            title: Text('Status Saver'),
+            actions: [
+              ElevatedButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.transparent),
+                      elevation: MaterialStateProperty.all(0)),
+                  child: Icon(Icons.share_outlined)),
+              ElevatedButton(
+                onPressed: () {
+                  var index = DefaultTabController.of(context).index;
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return HelpButton().popup(index, context);
+                      });
+                },
                 style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all(Colors.transparent),
                     elevation: MaterialStateProperty.all(0)),
-                child: Icon(Icons.share_outlined)),
-            ElevatedButton(
-              onPressed: () {},
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(Colors.transparent),
-                  elevation: MaterialStateProperty.all(0)),
-              child: Icon(Icons.help_center_outlined),
-            ),
-          ],
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/bg_screens.png'),
-                  fit: BoxFit.fill)),
-          child: TabBarView(
-            children: [
-              NestedTabBar(Directory('/storage/emulated/0/Pictures/'),
-                  Directory('/storage/emulated/0/Movies/'), false, adManager),
-              NestedTabBar(appDocDirectory, appDocDirectory, true, adManager),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.75,
-                    child: StickersPage(),
-                  ),
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.75,
-                    child: WhatsAppWeb(),
-                  )
-                ],
+                child: Icon(Icons.help_center_outlined),
               ),
             ],
           ),
-        ),
-        bottomNavigationBar: Container(height: 50, child: adManager.bannerAd),
-      ),
+          body: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('assets/images/bg_screens.png'),
+                    fit: BoxFit.fill)),
+            child: TabBarView(
+              children: [
+                remoteConfig.getString("SeenTab") == "true"
+                    ? NestedTabBar(
+                        Directory('/storage/emulated/0/WhatsApp/Media/.Statuses'),
+                        Directory('/storage/emulated/0/WhatsApp/Media/.Statuses'),
+                        false,
+                        adManager)
+                    : Container(child: Icon(Icons.error_outline)),
+                remoteConfig.getString("SavedTab") == "true"
+                    ? NestedTabBar(
+                        appDocDirectory, appDocDirectory, true, adManager)
+                    : Container(
+                        child: Icon(Icons.error_outline),
+                      ),
+                remoteConfig.getString("StickerTab") == "true"
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.75,
+                            child: StickersPage(),
+                          ),
+                        ],
+                      )
+                    : Container(child: Icon(Icons.error_outline)),
+                remoteConfig.getString("WebTab") == "true"
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.75,
+                            child: WhatsAppWeb(),
+                          )
+                        ],
+                      )
+                    : Container(child: Icon(Icons.error_outline)),
+              ],
+            ),
+          ),
+          bottomNavigationBar: Container(height: 50, child: adManager.bannerAd),
+        );
+      }),
     );
   }
 

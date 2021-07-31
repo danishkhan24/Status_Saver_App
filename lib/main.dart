@@ -43,35 +43,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String seenTab = "hello", savedTab = "hello";
+  String seenTab, savedTab, stickerTab, webTab;
   bool permissionGranted;
   FacebookAd facebookAd = FacebookAd();
+  RemoteConfig remoteConfig;
+  final Map<String, dynamic> _remoteValues = {
+    "seenTab": true,
+    "savedTab": true,
+    "stickerTab": true,
+    "webTab": true,
+  };
 
-  remoteSetup() async {
+  Future<RemoteConfig> remoteSetup() async {
     await Firebase.initializeApp();
     final remoteConfig = RemoteConfig.instance;
 
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 30),
-        minimumFetchInterval: Duration(hours: 24)));
+        fetchTimeout: const Duration(seconds: 5),
+        minimumFetchInterval: Duration.zero));
     remoteConfig.fetchAndActivate();
 
-    setState(() {
-      seenTab = remoteConfig.getString("SeenTab");
-      savedTab = remoteConfig.getString("SavedTab");
-    });
+    return remoteConfig;
   }
 
   @override
   initState() {
     super.initState();
     facebookAd.loadInterstitialAd();
-    // remoteSetup();
   }
 
   Future _getStoragePermission() async {
+    remoteConfig = await remoteSetup();
     Directory appDocDirectory = await getApplicationDocumentsDirectory();
     Directory path = Directory(appDocDirectory.path + "/savedImages/");
+    print("going up ...  $seenTab, $savedTab, $stickerTab, $webTab");
 
     if (await Permission.storage.request().isGranted) {
       permissionGranted = true;
@@ -80,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => FilesSection(path, facebookAd)),
+        MaterialPageRoute(builder: (context) => FilesSection(path, facebookAd, remoteConfig)),
       );
     } else if (await Permission.storage.request().isPermanentlyDenied) {
       await openAppSettings();
