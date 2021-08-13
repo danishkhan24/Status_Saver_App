@@ -1,4 +1,4 @@
-package com.wiki.status.saver.whatsweb.status_saver
+package com.wiki.status.saver.whatsweb.scan
 
 import io.flutter.embedding.android.FlutterActivity
 

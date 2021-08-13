@@ -6,14 +6,16 @@ class FacebookAd {
 
   FacebookAd() {
     FacebookAudienceNetwork.init(
-        testingId: "f1bde654-7bdb-42dc-b164-fc458109e499");
+        testingId: "f5841933-76c3-4650-b1d3-7bb5d174b9ab");
   }
 
   loadInterstitialAd() {
     print("inside load Interstitial Ad");
 
     FacebookInterstitialAd.loadInterstitialAd(
-      placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2650502525028617",
+      placementId: "215966960343194_215978213675402",
+      // test ID
+      // placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2650502525028617",
       listener: (result, value) {
         print(">> FAN > Interstitial Ad: $result --> $value");
         if (result == InterstitialAdResult.LOADED)
@@ -38,7 +40,9 @@ class FacebookAd {
   }
 
   Widget bannerAd = FacebookBannerAd(
-    placementId: "IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID",
+    placementId: "215966960343194_215976720342218",
+    // test ID
+    // placementId: "IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID",
     bannerSize: BannerSize.STANDARD,
     keepAlive: true,
     listener: (result, value) {
@@ -60,7 +64,9 @@ class FacebookAd {
   );
 
   final nativeAd = FacebookNativeAd(
-    placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2964953543583512",
+    placementId: "215966960343194_215979353675288",
+    // test ID
+    // placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2964953543583512",
     adType: NativeAdType.NATIVE_BANNER_AD,
     bannerAdSize: NativeBannerAdSize.HEIGHT_100,
     width: double.infinity,

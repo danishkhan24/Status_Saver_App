@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:679357398333:android:78a52e02688940c3219954",
+        "mobilesdk_app_id": "1:679357398333:android:9836adf0c64b6dd4219954",
         "android_client_info": {
-          "package_name": "com.wiki.status.saver.whatsweb.status_saver"
+          "package_name": "com.wiki.status.saver.whatsweb.scan"
         }
       },
       "oauth_client": [
