@@ -6,7 +6,7 @@ class FacebookAd {
 
   FacebookAd() {
     FacebookAudienceNetwork.init(
-        testingId: "0f9315ba-1dbc-4fc7-aa91-0a847c29f945");
+        testingId: "f1bde654-7bdb-42dc-b164-fc458109e499");
   }
 
   loadInterstitialAd() {

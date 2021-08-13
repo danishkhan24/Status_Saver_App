@@ -78,7 +78,7 @@ class ImageViewerState extends State<ImageViewer> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(name),
+        title: Text("Status Image"),
       ),
       body: Container(
         decoration: BoxDecoration(

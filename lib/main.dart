@@ -48,20 +48,13 @@ class _MyHomePageState extends State<MyHomePage> {
   FacebookAd facebookAd = FacebookAd();
   RemoteConfig remoteConfig;
   bool isLoading = true;
-  final Map<String, dynamic> _remoteValues = {
-    "seenTab": true,
-    "savedTab": true,
-    "stickerTab": true,
-    "webTab": true,
-    "SplashAd": true,
-  };
 
   remoteSetup() async {
     await Firebase.initializeApp();
     final remoteCfg = RemoteConfig.instance;
 
     await remoteCfg.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 5),
+        fetchTimeout: const Duration(minutes: 1),
         minimumFetchInterval: Duration.zero));
     remoteCfg.fetchAndActivate();
     remoteConfig = remoteCfg;

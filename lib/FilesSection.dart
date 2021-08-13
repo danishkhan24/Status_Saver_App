@@ -47,12 +47,12 @@ class FilesSectionState extends State<FilesSection>
       length: 4,
       child: Builder(builder: (BuildContext context) {
         return Scaffold(
-          // resizeToAvoidBottomInset: false,
-          drawer: Drawer(
-            child: drawer(),
-          ),
+          // drawer: Drawer(
+          //   child: drawer(),
+          // ),
           extendBodyBehindAppBar: true,
           appBar: AppBar(
+            leading: Container(),
             backgroundColor: Colors.transparent,
             elevation: 0,
             bottom: TabBar(
@@ -74,13 +74,13 @@ class FilesSectionState extends State<FilesSection>
             ),
             title: Text('Status Saver'),
             actions: [
-              ElevatedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.transparent),
-                      elevation: MaterialStateProperty.all(0)),
-                  child: Icon(Icons.share_outlined)),
+              // ElevatedButton(
+              //     onPressed: () {},
+              //     style: ButtonStyle(
+              //         backgroundColor:
+              //             MaterialStateProperty.all(Colors.transparent),
+              //         elevation: MaterialStateProperty.all(0)),
+              //     child: Icon(Icons.share_outlined)),
               ElevatedButton(
                 onPressed: () {
                   var index = DefaultTabController.of(context).index;

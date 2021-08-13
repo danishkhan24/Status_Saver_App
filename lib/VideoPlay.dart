@@ -88,14 +88,12 @@ class _VideoAppState extends State<VideoApp> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: (){
+          onPressed: () {
             adManager.showInterstitialAd();
             Navigator.pop(context);
           },
         ),
-        title: Text(
-          name,
-        ),
+        title: Text("Video Status"),
       ),
       body: Stack(children: [
         SizedBox(
@@ -159,7 +157,9 @@ class _VideoAppState extends State<VideoApp> {
   Widget shareButton() {
     if (_insideSavedSection) {
       return FloatingActionButton(
-        onPressed: (){_onShare();},
+        onPressed: () {
+          _onShare();
+        },
         child: Icon(Icons.share_outlined),
       );
     } else {
@@ -167,7 +167,7 @@ class _VideoAppState extends State<VideoApp> {
     }
   }
 
-  void _onShare() async{
+  void _onShare() async {
     await Share.shareFiles([videoFile.path]);
   }
 }

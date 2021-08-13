@@ -10,7 +10,7 @@ class HelpButton {
           children: [
             Row(
               children: [
-                Icon(Icons.add_circle_outline),
+                Icon(Icons.arrow_forward),
                 Flexible(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -20,7 +20,7 @@ class HelpButton {
             ),
             Row(
               children: [
-                Icon(Icons.add_circle_outline),
+                Icon(Icons.arrow_forward),
                 Flexible(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -30,7 +30,7 @@ class HelpButton {
             ),
             Row(
               children: [
-                Icon(Icons.add_circle_outline),
+                Icon(Icons.arrow_forward),
                 Flexible(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -49,7 +49,7 @@ class HelpButton {
           children: [
             Row(
               children: [
-                Icon(Icons.add_circle_outline),
+                Icon(Icons.arrow_forward),
                 Flexible(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -59,7 +59,7 @@ class HelpButton {
             ),
             Row(
               children: [
-                Icon(Icons.add_circle_outline),
+                Icon(Icons.arrow_forward),
                 Flexible(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -78,7 +78,7 @@ class HelpButton {
           children: [
             Row(
               children: [
-                Icon(Icons.add_circle_outline),
+                Icon(Icons.arrow_forward),
                 Flexible(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -96,7 +96,7 @@ class HelpButton {
           children: [
             Row(
               children: [
-                Icon(Icons.add_circle_outline),
+                Icon(Icons.arrow_forward),
                 Flexible(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -106,7 +106,7 @@ class HelpButton {
             ),
             Row(
               children: [
-                Icon(Icons.add_circle_outline),
+                Icon(Icons.arrow_forward),
                 Flexible(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -116,7 +116,7 @@ class HelpButton {
             ),
             Row(
               children: [
-                Icon(Icons.add_circle_outline),
+                Icon(Icons.arrow_forward),
                 Flexible(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
