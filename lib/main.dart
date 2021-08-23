@@ -1,17 +1,25 @@
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:status_saver/AdManager.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import './FilesSection.dart';
+import 'package:provider/provider.dart';
+import 'ProviderModel.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
+  }
+  runApp(ChangeNotifierProvider(
+    create: (context) => ProviderModel(),
+      child: MaterialApp(home: MyApp(),)));
 }
 
 class MyApp extends StatelessWidget {
@@ -28,6 +36,7 @@ class MyApp extends StatelessWidget {
           headline1: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
         ),
       ),
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(title: 'WhatsApp Status Saver'),
     );
   }
@@ -43,7 +52,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String seenTab, savedTab, stickerTab, webTab;
   bool permissionGranted;
   FacebookAd facebookAd = FacebookAd();
   RemoteConfig remoteConfig;
@@ -55,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     await remoteCfg.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(minutes: 1),
-        minimumFetchInterval: Duration.zero));
+        minimumFetchInterval: const Duration(hours: 24)));
     remoteCfg.fetchAndActivate();
     remoteConfig = remoteCfg;
 
@@ -66,9 +74,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   initState() {
+    var provider = Provider.of<ProviderModel>(context, listen: false);
+    provider.initialize();
     super.initState();
     facebookAd.loadInterstitialAd();
     remoteSetup();
+  }
+
+  @override
+  void dispose() {
+    var provider = Provider.of<ProviderModel>(context, listen: false);
+    provider.subscription.cancel();
+    super.dispose();
   }
 
   Future _getStoragePermission() async {

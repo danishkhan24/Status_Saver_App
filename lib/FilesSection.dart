@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:provider/provider.dart';
 import 'package:status_saver/AdManager.dart';
 import 'package:status_saver/HelpDialog.dart';
 import 'package:status_saver/stickers/stickers-page.dart';
 import 'package:status_saver/whatsappweb.dart';
 import 'ImageGridViewer.dart';
+import 'ProviderModel.dart';
 import 'VideoGridViewer.dart';
 
 Directory appDocDirectory;
@@ -27,12 +30,20 @@ class FilesSectionState extends State<FilesSection>
     with AutomaticKeepAliveClientMixin<FilesSection> {
   final appDocDirectory;
   int index = 0;
+  InAppPurchase _iap = InAppPurchase.instance;
 
   FilesSectionState(this.appDocDirectory);
 
   @override
   void initState() {
+    var provider = Provider.of<ProviderModel>(context, listen: false);
+    provider.verifyPurchase();
     super.initState();
+  }
+
+  void _buyProduct(ProductDetails prod) {
+    final PurchaseParam purchaseParam = PurchaseParam(productDetails: prod);
+    _iap.buyNonConsumable(purchaseParam: purchaseParam);
   }
 
   @override
@@ -43,6 +54,16 @@ class FilesSectionState extends State<FilesSection>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    var provider = Provider.of<ProviderModel>(context);
+    provider.isPurchased ? print("purchased") : print("not purchased");
+    for (var prod in provider.products) {
+      print(provider.hasPurchased(prod.id));
+      if (provider.hasPurchased(prod.id) != null) {
+        print("$prod is purchased for ${prod.price}");
+      }
+    }
+
     return DefaultTabController(
       length: 4,
       child: Builder(builder: (BuildContext context) {
@@ -74,13 +95,13 @@ class FilesSectionState extends State<FilesSection>
             ),
             title: Text('Status Saver'),
             actions: [
-              // ElevatedButton(
-              //     onPressed: () {},
-              //     style: ButtonStyle(
-              //         backgroundColor:
-              //             MaterialStateProperty.all(Colors.transparent),
-              //         elevation: MaterialStateProperty.all(0)),
-              //     child: Icon(Icons.share_outlined)),
+              ElevatedButton(
+                  onPressed: () => _buyProduct(provider.products[0]),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.transparent),
+                      elevation: MaterialStateProperty.all(0)),
+                  child: Icon(Icons.payment_outlined)),
               ElevatedButton(
                 onPressed: () {
                   var index = DefaultTabController.of(context).index;
@@ -152,7 +173,9 @@ class FilesSectionState extends State<FilesSection>
           bottomNavigationBar: remoteConfig.getString("MainBanner") == "true" ||
                   remoteConfig.getString("MainBanner").isEmpty
               ? Container(height: 50, child: adManager.bannerAd)
-              : SizedBox(height: 50,),
+              : SizedBox(
+                  height: 50,
+                ),
         );
       }),
     );
@@ -320,7 +343,8 @@ class _NestedTabBarState extends State<NestedTabBar>
           child: TabBarView(
             controller: _nestedTabController,
             children: <Widget>[
-              ImageGridViewer(photoDir, insideSavedSection, adManager, remoteConfig),
+              ImageGridViewer(
+                  photoDir, insideSavedSection, adManager, remoteConfig),
               VideoGridViewer(videoDir, insideSavedSection, adManager),
             ],
           ),
