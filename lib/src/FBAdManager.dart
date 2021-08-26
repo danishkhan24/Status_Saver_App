@@ -3,15 +3,21 @@ import 'package:flutter/material.dart';
 
 class FacebookAd {
   bool _isInterstitialAdLoaded = false;
+  bool adFree = false;
 
   FacebookAd() {
-    FacebookAudienceNetwork.init(
-        testingId: "f5841933-76c3-4650-b1d3-7bb5d174b9ab");
+    FacebookAudienceNetwork.init();
+  }
+
+  premium(bool value){
+    adFree = value;
   }
 
   loadInterstitialAd() {
-    print("inside load Interstitial Ad");
-
+    if (adFree) {
+      print("premium");
+      return;
+    }
     FacebookInterstitialAd.loadInterstitialAd(
       placementId: "215966960343194_215978213675402",
       // test ID
@@ -33,6 +39,10 @@ class FacebookAd {
   }
 
   showInterstitialAd() {
+    if (adFree) {
+      print("premium");
+      return;
+    }
     if (_isInterstitialAdLoaded == true)
       FacebookInterstitialAd.showInterstitialAd();
     else

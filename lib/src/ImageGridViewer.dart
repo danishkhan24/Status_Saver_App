@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:status_saver/AdManager.dart';
+import 'package:status_saver/src/FBAdManager.dart';
 import 'ImageViewer.dart';
 
 RemoteConfig remoteConfig;

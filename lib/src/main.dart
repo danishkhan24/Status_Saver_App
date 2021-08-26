@@ -6,14 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:status_saver/AdManager.dart';
+import 'package:status_saver/src/FBAdManager.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
-import './FilesSection.dart';
+import 'FilesSection.dart';
 import 'package:provider/provider.dart';
 import 'ProviderModel.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
   if (defaultTargetPlatform == TargetPlatform.android) {
     InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
   }
@@ -62,8 +63,8 @@ class _MyHomePageState extends State<MyHomePage> {
     final remoteCfg = RemoteConfig.instance;
 
     await remoteCfg.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(minutes: 1),
-        minimumFetchInterval: const Duration(hours: 24)));
+        fetchTimeout: const Duration(seconds: 20),
+        minimumFetchInterval: const Duration(seconds: 0)));
     remoteCfg.fetchAndActivate();
     remoteConfig = remoteCfg;
 
@@ -164,10 +165,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   side: BorderSide(color: Color(0xFF122829))),
             ),
             onPressed: () {
-              if (remoteConfig.getString("InterstitialAd") == "true" ||
-                  remoteConfig.getString("InterstitialAd").isEmpty) {
-                facebookAd.showInterstitialAd();
-              }
               _getStoragePermission();
             },
           ),

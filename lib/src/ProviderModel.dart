@@ -9,29 +9,34 @@ class ProviderModel with ChangeNotifier {
   StreamSubscription<List<PurchaseDetails>> subscription;
   final String myProductID = 'ads_free';
 
-
   bool _isPurchased = false;
+
   bool get isPurchased => _isPurchased;
+
   set isPurchased(bool value) {
     _isPurchased = value;
     notifyListeners();
   }
 
   List _purchases = [];
+
   List get purchases => _purchases;
+
   set purchases(List value) {
     _purchases = value;
     notifyListeners();
   }
 
   List _products = [];
+
   List get products => _products;
+
   set products(List value) {
     _products = value;
     notifyListeners();
   }
 
-  void initialize() async {
+  initialize() async {
     available = await _iap.isAvailable();
     if (available) {
       await _getProducts();
@@ -40,16 +45,18 @@ class ProviderModel with ChangeNotifier {
       subscription = _iap.purchaseStream.listen((data) {
         purchases.addAll(data);
         verifyPurchase();
+      }, onDone: () {
+        subscription.cancel();
+      }, onError: (error) {
+        print("Error during subscription listening");
       });
     }
   }
 
-  void verifyPurchase() {
+  verifyPurchase() async {
     PurchaseDetails purchase = hasPurchased(myProductID);
-    print(purchase);
 
     if (purchase != null && purchase.status == PurchaseStatus.purchased) {
-
       if (purchase.pendingCompletePurchase) {
         _iap.completePurchase(purchase);
 
@@ -58,25 +65,24 @@ class ProviderModel with ChangeNotifier {
         }
       }
     }
-  }
 
+    if (purchase != null && purchase.status == PurchaseStatus.restored){
+      isPurchased = true;
+    }
+  }
 
   PurchaseDetails hasPurchased(String productID) {
     return purchases
         .firstWhereOrNull((purchase) => purchase.productID == productID);
   }
 
-
   Future<void> _getProducts() async {
     Set<String> ids = Set.from([myProductID]);
     ProductDetailsResponse response = await _iap.queryProductDetails(ids);
     products = response.productDetails;
-    print("products available for purchase :$products");
   }
-
 
   Future<void> _getPastPurchases() async {
     await _iap.restorePurchases();
   }
-
 }

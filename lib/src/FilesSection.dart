@@ -3,10 +3,10 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
-import 'package:status_saver/AdManager.dart';
-import 'package:status_saver/HelpDialog.dart';
+import 'package:status_saver/src/FBAdManager.dart';
+import 'package:status_saver/src/HelpDialog.dart';
 import 'package:status_saver/stickers/stickers-page.dart';
-import 'package:status_saver/whatsappweb.dart';
+import 'package:status_saver/src/WhatsAppWeb.dart';
 import 'ImageGridViewer.dart';
 import 'ProviderModel.dart';
 import 'VideoGridViewer.dart';
@@ -31,19 +31,33 @@ class FilesSectionState extends State<FilesSection>
   final appDocDirectory;
   int index = 0;
   InAppPurchase _iap = InAppPurchase.instance;
+  ProviderModel provider;
 
   FilesSectionState(this.appDocDirectory);
 
   @override
   void initState() {
-    var provider = Provider.of<ProviderModel>(context, listen: false);
-    provider.verifyPurchase();
     super.initState();
+    inAppPurchaseController();
   }
 
   void _buyProduct(ProductDetails prod) {
+    var success;
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: prod);
-    _iap.buyNonConsumable(purchaseParam: purchaseParam);
+    success = _iap.buyNonConsumable(purchaseParam: purchaseParam);
+    if (success) {
+      adManager.premium(true);
+      setState(() {});
+    }
+  }
+
+  inAppPurchaseController() async {
+    provider = Provider.of<ProviderModel>(context, listen: false);
+    await provider.initialize();
+    await provider.verifyPurchase();
+    if (provider.isPurchased) {
+      adManager.premium(true);
+    }
   }
 
   @override
@@ -54,15 +68,6 @@ class FilesSectionState extends State<FilesSection>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
-    var provider = Provider.of<ProviderModel>(context);
-    provider.isPurchased ? print("purchased") : print("not purchased");
-    for (var prod in provider.products) {
-      print(provider.hasPurchased(prod.id));
-      if (provider.hasPurchased(prod.id) != null) {
-        print("$prod is purchased for ${prod.price}");
-      }
-    }
 
     return DefaultTabController(
       length: 4,
@@ -170,7 +175,8 @@ class FilesSectionState extends State<FilesSection>
               ],
             ),
           ),
-          bottomNavigationBar: remoteConfig.getString("MainBanner") == "true" ||
+          bottomNavigationBar: !adManager.adFree &&
+                      remoteConfig.getString("MainBanner") == "true" ||
                   remoteConfig.getString("MainBanner").isEmpty
               ? Container(height: 50, child: adManager.bannerAd)
               : SizedBox(
