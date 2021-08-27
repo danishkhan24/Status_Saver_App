@@ -3,7 +3,6 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:status_saver/AdManager.dart';
 import 'package:status_saver/FilesSection.dart';
 
 RemoteConfig remoteConfig;
@@ -123,7 +122,7 @@ class ImageViewerState extends State<ImageViewer> {
                 shareButton(),
               ],
             ),
-            FacebookAd().bannerAd,
+            !adManager.adFree?adManager.bannerAd:Container(),
           ],
         ),
       ),

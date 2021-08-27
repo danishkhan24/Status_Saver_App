@@ -63,6 +63,10 @@ android {
         }
     }
 
+    aaptOptions {
+        noCompress "webp"
+    }
+
 }
 
 flutter {
@@ -74,4 +78,5 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.2.1')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.android.billingclient:billing:3.0.2'
 }

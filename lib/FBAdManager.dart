@@ -3,16 +3,23 @@ import 'package:flutter/material.dart';
 
 class FacebookAd {
   bool _isInterstitialAdLoaded = false;
+  bool adFree = false;
 
   FacebookAd() {
-    FacebookAudienceNetwork.init(
-        testingId: "f5841933-76c3-4650-b1d3-7bb5d174b9ab");
+    FacebookAudienceNetwork.init();
+    loadInterstitialAd();
   }
 
-  loadInterstitialAd() {
-    print("inside load Interstitial Ad");
+  premium(bool value){
+    adFree = value;
+  }
 
-    FacebookInterstitialAd.loadInterstitialAd(
+  loadInterstitialAd() async {
+    if (adFree) {
+      print("premium");
+      return;
+    }
+    await FacebookInterstitialAd.loadInterstitialAd(
       placementId: "215966960343194_215978213675402",
       // test ID
       // placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2650502525028617",
@@ -33,10 +40,15 @@ class FacebookAd {
   }
 
   showInterstitialAd() {
+    if (adFree) {
+      print("premium");
+      return;
+    }
     if (_isInterstitialAdLoaded == true)
       FacebookInterstitialAd.showInterstitialAd();
     else
-      print("Interstitial Ad not loaded yet!");
+      {
+      print("Interstitial Ad not loaded yet!");}
   }
 
   Widget bannerAd = FacebookBannerAd(
