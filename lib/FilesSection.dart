@@ -3,10 +3,10 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
-import 'package:status_saver/src/FBAdManager.dart';
-import 'package:status_saver/src/HelpDialog.dart';
+import 'package:status_saver/FBAdManager.dart';
+import 'package:status_saver/HelpDialog.dart';
 import 'package:status_saver/stickers/stickers-page.dart';
-import 'package:status_saver/src/WhatsAppWeb.dart';
+import 'package:status_saver/WhatsAppWeb.dart';
 import 'ImageGridViewer.dart';
 import 'ProviderModel.dart';
 import 'VideoGridViewer.dart';
@@ -32,6 +32,7 @@ class FilesSectionState extends State<FilesSection>
   int index = 0;
   InAppPurchase _iap = InAppPurchase.instance;
   ProviderModel provider;
+  bool update = false;
 
   FilesSectionState(this.appDocDirectory);
 
@@ -42,21 +43,25 @@ class FilesSectionState extends State<FilesSection>
   }
 
   void _buyProduct(ProductDetails prod) {
-    var success;
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: prod);
-    success = _iap.buyNonConsumable(purchaseParam: purchaseParam);
-    if (success) {
-      adManager.premium(true);
-      setState(() {});
-    }
+    _iap.buyNonConsumable(purchaseParam: purchaseParam).then((value) {
+      if (value == true) {
+        adManager.premium(true);
+        setState(() {
+          update = true;
+        });
+      }
+    });
   }
 
   inAppPurchaseController() async {
     provider = Provider.of<ProviderModel>(context, listen: false);
     await provider.initialize();
     await provider.verifyPurchase();
+    print(provider.isPurchased);
     if (provider.isPurchased) {
       adManager.premium(true);
+      setState(() {});
     }
   }
 

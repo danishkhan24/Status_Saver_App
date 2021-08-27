@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:status_saver/src/FBAdManager.dart';
+import 'package:status_saver/FBAdManager.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'FilesSection.dart';
 import 'package:provider/provider.dart';
